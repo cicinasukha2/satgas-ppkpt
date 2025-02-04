@@ -27,12 +27,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // Prevent double hashing when setting password
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = md5($value);
-    }
-
     // Validate user login
     public static function validateUser($nipn_nim, $password)
     {
