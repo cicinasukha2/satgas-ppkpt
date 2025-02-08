@@ -22,6 +22,7 @@ class CreateLaporanTable extends Migration
             $table->string('lokasi_kejadian', 255); // Incident location
             $table->timestamp('tanggal_kejadian'); // Incident date
             $table->text('bukti_kejadian')->nullable(); // Incident evidence (nullable)
+            $table->enum('status', ['Di Proses', 'Selesai'])->default('Di Proses'); // Report status
             $table->timestamps(); 
             // Foreign Key Constraint
             $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade');

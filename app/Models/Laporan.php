@@ -27,6 +27,7 @@ class Laporan extends Model
         'lokasi_kejadian',
         'tanggal_kejadian',
         'bukti_kejadian',
+        'status',
     ];
 
     public function user()
