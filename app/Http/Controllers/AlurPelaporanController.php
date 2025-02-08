@@ -11,7 +11,7 @@ class AlurPelaporanController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function showAlurPelaporan()
     {
         return view('alur_pelaporan.alur_pelaporan'); 
     }

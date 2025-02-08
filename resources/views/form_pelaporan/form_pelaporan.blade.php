@@ -59,7 +59,7 @@
           @endif
 
           <!-- Form Pelaporan -->
-          <form action="{{ route('laporan.store') }}" method="POST" enctype="multipart/form-data">
+          <form action="{{ route('halaman.form-pelaporan') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row mb-3">
               <div class="col-md-6">

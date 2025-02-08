@@ -15,32 +15,12 @@ Route::get('/', function () {
     return view('home');
 });
 // Route untuk Alur Pelaporan (akses publik tanpa middleware)
-Route::get('/alur-pelaporan', [AlurPelaporanController::class, 'showFormPelaporan'])->name('alur_pelaporan.index');
+Route::get('/alur-pelaporan', [AlurPelaporanController::class, 'showAlurPelaporan'])->name('alur_pelaporan.index');
 
 // Group routes that require authentication
 Route::middleware(['auth'])->group(function () {
     // User routes
-    
-
-
-    
-    Route::get('/form-pelaporan', function () {
-        return view('form_pelaporan.form_pelaporan');
-    })->name('laporan.view');
-    Route::post('/form-pelaporan', [LaporanController::class, 'inputLaporan'])->name('laporan.store');
-
-    // Dashboard route
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-});
-
-
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'index'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-    Route::get('/user/login', [AuthController::class, 'showLoginForm'])->name('user.login');
-    Route::post('/user/login', [AuthController::class, 'login']);
-    Route::get('/user/register', [AuthController::class, 'showRegisterForm'])->name('user.register');
-    Route::post('/user/register', [AuthController::class, 'register']);
+    Route::post('/admin/logout', [LoginController::class, 'adminLogout'])->name('admin.logout');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -51,13 +31,35 @@ Route::middleware('guest')->group(function () {
     Route::put('/dashboard/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/dashboard/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('/laporan/create', [LaporanController::class, 'create'])->name('laporan.create');
-    Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
-    Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
-    Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('laporan.update');
-    Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
-    Route::put('/laporan/{id}/status', [LaporanController::class, 'updateStatus'])->name('laporan.updateStatus');
+    Route::get('/dashboard/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/dashboard/laporan/create', [LaporanController::class, 'create'])->name('laporan.create');
+    Route::post('/dashboard/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+    Route::get('/dashboard/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
+    Route::put('/dashboard/laporan/{laporan}', [LaporanController::class, 'update'])->name('laporan.update');
+    Route::delete('/dashboard/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
+    Route::put('/dashboard/laporan/{id}/status', [LaporanController::class, 'updateStatus'])->name('laporan.updateStatus');
+    
+    Route::get('/form-pelaporan', function () {
+        return view('form_pelaporan.form_pelaporan');
+    })->name('laporan.view');
+    Route::post('/form-pelaporan', [LaporanController::class, 'inputLaporan'])->name('halaman.form-pelaporan');
+
+    // Dashboard route
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+});
+
+
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [LoginController::class, 'showAdminLogin'])->name('admin.login');
+    Route::post('/admin/login', [LoginController::class, 'adminLogin'])->name('admin.login.submit');
+    
+
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::get('/user/login', [AuthController::class, 'showLoginForm'])->name('user.login');
+    Route::post('/user/login', [AuthController::class, 'login']);
+    Route::get('/user/register', [AuthController::class, 'showRegisterForm'])->name('user.register');
+    Route::post('/user/register', [AuthController::class, 'register']);
 
 });
 

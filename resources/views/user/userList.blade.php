@@ -13,9 +13,11 @@
                     <div class="card">
                         <div class="card-header">
                             <h4>Data User</h4>
-                            @if(isset($currentUser) && $currentUser->role_id == 1)
+                            @if(Auth::user()->role_id == 1) <!-- Hanya Admin bisa menambah user -->
                                 <div class="card-header-action">
-                                    <a href="{{ route('users.create') }}" class="btn btn-lg btn-info"><i class="fas fa-plus"></i> Tambah Baru</a>
+                                    <a href="{{ route('users.create') }}" class="btn btn-lg btn-info">
+                                        <i class="fas fa-plus"></i> Tambah Baru
+                                    </a>
                                 </div>
                             @endif
                         </div>
@@ -28,27 +30,39 @@
                                     <thead>                                 
                                         <tr>
                                             <th class="text-center">ID</th>
+                                            <th>NAMA</th>
                                             <th>Email</th>
                                             <th>NIPN/NIM</th>
                                             <th>Kontak</th>
                                             <th>Role</th>
-                                            <th>Action</th>
+                                            @if(Auth::user()->role_id == 1) <!-- Hanya Admin bisa mengedit atau hapus -->
+                                                <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>                                 
                                         @forelse($users as $user)
                                             <tr>
                                                 <td class="text-center">{{ $user->user_id }}</td>
+                                                <td>{{ $user->nama }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->nipn_nim }}</td>
                                                 <td>{{ $user->kontak }}</td>
                                                 <td class="text-capitalize">
-                                                    <div class="badge badge-{{ $user->role_id == 1 ? 'primary' : 'secondary' }}">
-                                                        {{ $user->role_id == 1 ? 'Administrator' : 'User' }}
-                                                    </div>
+                                                <div class="badge badge-{{ 
+                                                    $user->role_id == 1 ? 'primary' : 
+                                                    ($user->role_id == 2 ? 'warning' : 'secondary') 
+                                                }}">
+                                                    {{ 
+                                                        $user->role_id == 1 ? 'Sekeretaris Satgas' : 
+                                                        ($user->role_id == 2 ? 'Ketua Satgas' : 'Pelapor') 
+                                                    }}
+                                                </div>
                                                 </td>
-                                                <td>
-                                                    @if(isset($currentUser) && $currentUser->role_id == 1)
+
+                                                <!-- Aksi hanya untuk Admin (role_id = 1) -->
+                                                @if(Auth::user()->role_id == 1)
+                                                    <td>
                                                         <a href="{{ route('users.edit', $user) }}" class="btn btn-primary btn-action mr-1" data-toggle="tooltip" title="Edit">
                                                             <i class="fas fa-pencil-alt"></i>
                                                         </a>
@@ -59,14 +73,12 @@
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
-                                                    @else
-                                                        <span class="text-muted">Akses Ditolak</span>
-                                                    @endif
-                                                </td>
+                                                    </td>
+                                                @endif
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center">Tidak ada data user</td>
+                                                <td colspan="{{ Auth::user()->role_id == 1 ? '6' : '5' }}" class="text-center">Tidak ada data user</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

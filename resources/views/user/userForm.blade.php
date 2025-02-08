@@ -36,9 +36,14 @@
                                     <div class="form-group">
                                         <label>Role</label>
                                         <select class="form-control text-capitalize" name="role_id">
-                                            <option value="1" {{ (isset($user) && $user->role_id == 1) ? 'selected' : '' }}>Administrator</option>
-                                            <option value="2" {{ (isset($user) && $user->role_id == 2) ? 'selected' : '' }}>Manajemen</option>
+                                            <option value="1" {{ (isset($user) && $user->role_id == 1) ? 'selected' : '' }}>Sekretaris Satgas</option>
+                                            <option value="2" {{ (isset($user) && $user->role_id == 2) ? 'selected' : '' }}>Ketua Satgas</option>
+                                            <option value="3" {{ (isset($user) && $user->role_id == 3) ? 'selected' : '' }}>Pelapor</option>
                                         </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nama</label>
+                                        <input name="nama" type="nama" class="form-control" value="{{ $user->nama ?? old('nama') }}">
                                     </div>
                                     <div class="form-group">
                                         <label>Email</label>
@@ -51,15 +56,15 @@
                                         <input name="nipn_nim" type="text" class="form-control" value="{{ $user->nipn_nim ?? old('nipn_nim') }}">
                                     </div>
                                     <div class="form-group">
+                                        <label>Kontak</label>
+                                        <input name="kontak" type="text" class="form-control" value="{{ $user->kontak ?? old('kontak') }}">
+                                    </div>
+                                    <div class="form-group">
                                         <label>Password</label>
                                         <input name="password" type="password" class="form-control">
                                         @if(isset($user))
                                             <small>Kosongkan jika tidak ingin mengganti password</small>
                                         @endif
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Kontak</label>
-                                        <input name="kontak" type="text" class="form-control" value="{{ $user->kontak ?? old('kontak') }}">
                                     </div>
                                     <div class="form-group text-right">
                                         <button class="btn btn-info mr-1" type="submit">Simpan</button>

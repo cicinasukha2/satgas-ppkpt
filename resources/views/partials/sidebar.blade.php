@@ -10,7 +10,7 @@
             <li class="dropdown">
                 <a href="#" class="nav-link has-dropdown">
                     <i class="fas fa-user text-danger"></i>
-                    <span>Hai, {{ Auth::user()->name ?? 'Satgas PPKPT' }}</span>
+                    <span>Hai, {{ Auth::user()->nama ?? 'Satgas PPKPT' }}</span>
                 </a>
             </li>
 
@@ -32,7 +32,7 @@
         </ul>
 
         <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
             <a href="#" class="btn btn-danger btn-lg btn-block btn-icon-split"
