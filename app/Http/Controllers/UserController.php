@@ -11,53 +11,83 @@ class UserController extends Controller
 {
     public function index()
     {
+        // Pastikan hanya role 1 dan 2 yang bisa melihat daftar user
+        if (!in_array(Auth::user()->role_id, [1, 2])) {
+            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+
         $users = User::all();
-        $level = Auth::user();
-        return view('user.userList', compact('users', 'level'));
+        return view('user.userList', compact('users'));
     }
 
     public function create()
     {
-        $level = Auth::user();
-        return view('user.userForm', compact('level'));
+        // Hanya role 1 yang bisa menambah user
+        if (Auth::user()->role_id != 1) {
+            return redirect()->route('users.index')->with('error', 'Anda tidak memiliki izin untuk menambah user.');
+        }
+
+        return view('user.userForm');
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nama' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:user',
+        // Pastikan hanya role 1 yang bisa menambah user
+        if (Auth::user()->role_id != 1) {
+            return redirect()->route('users.index')->with('error', 'Anda tidak memiliki izin untuk menambah user.');
+        }
+
+        $request->validate([
+            'nama' => 'nullable|string|max:100',
+            'nipn_nim' => 'required|string|max:50|unique:user,nipn_nim',
+            'email' => 'required|string|email|max:100|unique:user,email',
             'password' => 'required|string|min:8',
-            'level' => 'required|in:administrator,manajemen',
+            'kontak' => 'required|string|max:20',
+            'role_id' => 'required|in:1,2,3',
         ]);
 
-        // // Hash password using MD5
-        // $data['password'] = md5($data['password']);
-        User::create($data);
+        User::create([
+            'nama' => $request->nama,
+            'nipn_nim' => $request->nipn_nim,
+            'email' => $request->email,
+            'password' => md5($request->password), // Hash dengan MD5
+            'kontak' => $request->kontak,
+            'role_id' => $request->role_id,
+        ]);
 
-        return redirect()->route('users.index')->with('success', 'Berhasil menambahkan user');
+        return redirect()->route('users.index')->with('success', 'Berhasil menambahkan user baru.');
     }
-
 
     public function edit(User $user)
     {
-        $level = Auth::user();
-        return view('user.userForm', compact('user', 'level'));
+        // Hanya role 1 yang bisa mengedit user
+        if (Auth::user()->role_id != 1) {
+            return redirect()->route('users.index')->with('error', 'Anda tidak memiliki izin untuk mengedit user.');
+        }
+
+        return view('user.userForm', compact('user'));
     }
 
     public function update(Request $request, User $user)
     {
-        $data = $request->validate([
-            'nama' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:user,username,' . $user->id_user . ',id_user',
+        // Hanya role 1 yang bisa mengedit user
+        if (Auth::user()->role_id != 1) {
+            return redirect()->route('users.index')->with('error', 'Anda tidak memiliki izin untuk memperbarui user.');
+        }
+
+        $request->validate([
+            'name' => 'nullable|string|max:100',
+            'nipn_nim' => 'required|string|max:50|unique:user,nipn_nim,' . $user->user_id . ',user_id',
+            'email' => 'required|string|email|max:100|unique:user,email,' . $user->user_id . ',user_id',
             'password' => 'nullable|string|min:8',
-            'level' => 'required|in:administrator,manajemen',
+            'kontak' => 'required|string|max:20',
+            'role_id' => 'required|in:1,2',
         ]);
 
+        $data = $request->only(['nama','nipn_nim', 'email', 'kontak', 'role_id']);
+
         if ($request->filled('password')) {
-            $data['password'] = ($request->password); 
-        } else {
-            unset($data['password']);  
+            $data['password'] = md5($request->password);
         }
 
         $user->update($data);
@@ -67,6 +97,11 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        // Hanya role 1 yang bisa menghapus user
+        if (Auth::user()->role_id != 1) {
+            return redirect()->route('users.index')->with('error', 'Anda tidak memiliki izin untuk menghapus user.');
+        }
+
         $user->delete();
         return redirect()->route('users.index')->with('success', "User {$user->nama} berhasil dihapus.");
     }

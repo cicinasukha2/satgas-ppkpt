@@ -34,6 +34,7 @@
 <script src="{{ asset('modules/moment.min.js') }}"></script>
 <script src="{{ asset('js/stisla.js') }}"></script>
 
+
 <!-- JS Libraries -->
 <script src="{{ asset('modules/datatables/datatables.min.js') }}"></script>
 <script src="{{ asset('modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
